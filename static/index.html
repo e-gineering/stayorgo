@@ -8,13 +8,20 @@
 <body>
 <h1>Hello {{.Name}}</h1>
 <h2>Items List</h2>
-<ul id="items-list" hx-get="http://localhost:8080/list" hx-trigger="load">
+<div id="items-list" hx-get="http://localhost:8080/list" hx-trigger="load">
     <!-- Items will be loaded here -->
-</ul>
+</div>
 
-<form hx-post="http://localhost:8080/add" hx-target="#items-list" hx-swap="outerHTML">
+<form id="addForm" hx-post="/add" hx-target="#items-list" hx-swap="outerHTML">
     <input type="text" name="item" required>
     <button>Add Item</button>
 </form>
+<script>
+    document.body.addEventListener('htmx:afterRequest', function(event) {
+        if (event.detail.elt.id === 'addForm') {
+            event.detail.elt.reset();
+        }
+    })
+</script>
 </body>
 </html>
