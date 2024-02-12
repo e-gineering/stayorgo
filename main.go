@@ -41,6 +41,7 @@ func main() {
 
 	// CORS handler
 	handler := cors.New(cors.Options{
+		//TODO fix cors for any development but local
 		AllowedOrigins:   []string{"*"},
 		AllowCredentials: true,
 		Debug:            true,
@@ -107,7 +108,7 @@ func generateHTMLforItems(items []string) string {
 	htmlBuilder.WriteString("<ul id='items-list'>")
 	for _, item := range items {
 		safeItem := html.EscapeString(item)
-		htmlBuilder.WriteString(fmt.Sprintf("<li>%s <button hx-post='http://localhost:8080/delete' hx-target='#items-list' hx-swap='outerHTML' hx-vals='{\"item\":\"%s\"}'>Delete</button></li>", safeItem, safeItem))
+		htmlBuilder.WriteString(fmt.Sprintf("<li>%s <button hx-post='/delete' hx-target='#items-list' hx-swap='outerHTML' hx-vals='{\"item\":\"%s\"}'>Delete</button></li>", safeItem, safeItem))
 	}
 	htmlBuilder.WriteString("</ul>")
 	return htmlBuilder.String()
