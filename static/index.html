@@ -6,6 +6,7 @@
     <script src="https://unpkg.com/htmx.org"></script>
 </head>
 <body>
+<h1>Hello {{.Name}}</h1>
 <h2>Items List</h2>
 <ul id="items-list" hx-get="http://localhost:8080/list" hx-trigger="load">
     <!-- Items will be loaded here -->

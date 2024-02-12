@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"github.com/rs/cors"
 	"html"
+	"html/template"
 	"log"
 	"net/http"
 	"os"
@@ -142,6 +143,19 @@ func handleAdd(writer http.ResponseWriter, request *http.Request) {
 	fmt.Fprintf(writer, htmlResponse)
 }
 
+type PageData struct {
+	Name string
+}
+
 func serveFrontend(writer http.ResponseWriter, request *http.Request) {
-	http.ServeFile(writer, request, "static/index.html")
+	t, _ := template.ParseFiles("static/index.html")
+
+	data := PageData{
+		Name: os.Getenv("PERSON"),
+	}
+	err := t.Execute(writer, data)
+	if err != nil {
+		return
+	}
+
 }
