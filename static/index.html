@@ -7,11 +7,11 @@
 </head>
 <body>
 <h2>Items List</h2>
-<ul id="items-list" hx-get="localhost:8080/list" hx-trigger="load">
+<ul id="items-list" hx-get="http://localhost:8080/list" hx-trigger="load">
     <!-- Items will be loaded here -->
 </ul>
 
-<form hx-post="localhost:8080/add" hx-target="#items-list" hx-swap="outerHTML">
+<form hx-post="http://localhost:8080/add" hx-target="#items-list" hx-swap="outerHTML">
     <input type="text" name="item" required>
     <button>Add Item</button>
 </form>

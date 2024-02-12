@@ -2,7 +2,10 @@ module stayorgo
 
 go 1.22.0
 
-require github.com/go-redis/redis/v8 v8.11.5
+require (
+	github.com/go-redis/redis/v8 v8.11.5
+	github.com/rs/cors v1.10.1
+)
 
 require (
 	github.com/cespare/xxhash/v2 v2.1.2 // indirect
