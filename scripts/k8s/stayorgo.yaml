@@ -1,0 +1,53 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: stayorgo
+  labels:
+    app: stayorgo
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: stayorgo
+  template:
+    metadata:
+      name: stayorgo
+      labels:
+        app: stayorgo
+    spec:
+      containers:
+        - name: stayorgo
+          image: stayorgo:0.1
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 8080
+          resources:
+            requests:
+              memory: "64M"
+              cpu: "250m"
+            limits:
+              memory: "64M"
+              cpu: "250m"
+          env:
+             - name: REDIS
+               value: redis
+             - name: PERSON
+               value: Fredrick
+      restartPolicy: Always
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: stayorgo-service
+  labels:
+    app: stayorgo
+spec:
+  type: NodePort #cluster port expose for localhost routing
+  ports:
+    - port: 8080  # The port the service is exposed on
+      targetPort: 8080  # The target port on the pods, adjust as necessary
+      protocol: TCP
+      name: http
+  selector:
+    app: stayorgo  # Must match labels of the pods you want to target

@@ -118,7 +118,6 @@ func generateHTMLforItems(items []string) string {
 func handleAdd(writer http.ResponseWriter, request *http.Request) {
 
 	key := "itemsList"
-	writer.Header().Set("Origin", "localhost")
 
 	// assuming application/x-www-form-urlencoded data
 	if err := request.ParseForm(); err != nil {
