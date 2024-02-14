@@ -2,26 +2,33 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, inital-scale=1.0">
     <title>Go App with HTMX</title>
     <script src="https://unpkg.com/htmx.org"></script>
+    <link rel="stylesheet" href="/static/css/styles.css">
 </head>
 <body>
-<h1>Hello {{.Name}} served from {{.PodName}}</h1>
-<h2>Items List</h2>
-<div id="items-list" hx-get="/list" hx-trigger="load">
-    <!-- Items will be loaded here -->
-</div>
+<div class="container">
+    <h1>Hello {{.Name}}</h1>
+    <h2>Served from {{.PodName}}</h2>
+    <h2>Items List</h2>
+    <div id="items-list" hx-get="/list" hx-trigger="load">
+        <!-- Items will be loaded here -->
+    </div>
 
-<form id="addForm" hx-post="/add" hx-target="#items-list" hx-swap="outerHTML">
-    <input type="text" name="item" required>
-    <button>Add Item</button>
-</form>
-<script>
-    document.body.addEventListener('htmx:afterRequest', function(event) {
-        if (event.detail.elt.id === 'addForm') {
-            event.detail.elt.reset();
-        }
-    })
-</script>
+    <form id="addForm" hx-post="/add" hx-target="#items-list" hx-swap="outerHTML">
+        <div class="input-group">
+            <input class="input-field" type="text" name="item" required>
+            <button class="btn add-btn">Add Item</button>
+        </div>
+    </form>
+    <script>
+        document.body.addEventListener('htmx:afterRequest', function (event) {
+            if (event.detail.elt.id === 'addForm') {
+                event.detail.elt.reset();
+            }
+        })
+    </script>
+</div>
 </body>
 </html>

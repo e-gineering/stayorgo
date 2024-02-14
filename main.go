@@ -43,6 +43,9 @@ func main() {
 	port := "8080"
 	fmt.Printf("Server is starting on port %s\n", port)
 
+	fs := http.FileServer(http.Dir("static"))
+	mux.Handle("/static/", http.StripPrefix("/static/", fs))
+
 	// CORS handler
 	handler := cors.New(cors.Options{
 		//TODO fix cors for any development but local
@@ -109,10 +112,10 @@ func handleList(writer http.ResponseWriter, request *http.Request) {
 
 func generateHTMLforItems(items []string) string {
 	var htmlBuilder strings.Builder
-	htmlBuilder.WriteString("<ul id='items-list'>")
+	htmlBuilder.WriteString("<ul class='items-list' id='items-list'>")
 	for _, item := range items {
 		safeItem := html.EscapeString(item)
-		htmlBuilder.WriteString(fmt.Sprintf("<li>%s <button hx-post='/delete' hx-target='#items-list' hx-swap='outerHTML' hx-vals='{\"item\":\"%s\"}'>Delete</button></li>", safeItem, safeItem))
+		htmlBuilder.WriteString(fmt.Sprintf("<li class='item'><span class='item-name'>%s</span> <button class='btn delete-btn' hx-post='/delete' hx-target='#items-list' hx-swap='outerHTML' hx-vals='{\"item\":\"%s\"}'>Delete</button></li>", safeItem, safeItem))
 	}
 	htmlBuilder.WriteString("</ul>")
 	return htmlBuilder.String()
