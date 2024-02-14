@@ -71,6 +71,80 @@ func main() {
 	}
 }
 
+type PageData struct {
+	Name    string
+	PodName string
+}
+
+func serveFrontend(writer http.ResponseWriter, request *http.Request) {
+	t, _ := template.ParseFiles("static/index.html")
+
+	data := PageData{
+		Name:    getPerson(),
+		PodName: getPodName(),
+	}
+	err := t.Execute(writer, data)
+	if err != nil {
+		return
+	}
+
+}
+
+func handleList(writer http.ResponseWriter, request *http.Request) {
+
+	key := "itemsList"
+	client := newRedisClient()
+
+	items, err := client.LRange(ctx, key, 0, -1).Result()
+	if err != nil {
+		http.Error(writer, "Failed to fetch items", http.StatusInternalServerError)
+		log.Fatalf("Failed to start server: %+v", err)
+	}
+
+	htmlResponse := generateHTMLforItems(items)
+	fmt.Fprintf(writer, htmlResponse)
+}
+
+func handleAdd(writer http.ResponseWriter, request *http.Request) {
+
+	key := "itemsList"
+
+	// assuming application/x-www-form-urlencoded data
+	if err := request.ParseForm(); err != nil {
+		http.Error(writer, "Invalid Form data", 400)
+		return
+	}
+	item := request.FormValue("item")
+
+	// use Redis client to add the item
+	client := newRedisClient()
+	if err := client.RPush(ctx, key, item).Err(); err != nil {
+		http.Error(writer, "Failed to add item", http.StatusInternalServerError)
+		return
+	}
+
+	writer.WriteHeader(http.StatusCreated)
+	items, err := client.LRange(ctx, key, 0, -1).Result()
+	if err != nil {
+		http.Error(writer, "Failed to fetch items", http.StatusInternalServerError)
+		log.Fatalf("Failed to start server: %+v", err)
+	}
+	htmlResponse := generateHTMLforItems(items)
+	fmt.Fprintf(writer, htmlResponse)
+}
+
+func generateHTMLforItems(items []string) string {
+	var htmlBuilder strings.Builder
+	htmlBuilder.WriteString("<ul class='items-list' id='items-list'>")
+	for _, item := range items {
+		safeItem := html.EscapeString(item)
+		htmlBuilder.WriteString(fmt.Sprintf("<li class='item'><span class='item-name'>%s</span> <button class='btn delete-btn' hx-post='/delete' hx-target='#items-list' hx-swap='outerHTML' hx-vals='{\"item\":\"%s\"}'>Delete</button></li>", safeItem, safeItem))
+	}
+	htmlBuilder.WriteString("</ul>")
+	return htmlBuilder.String()
+
+}
+
 func handleDelete(writer http.ResponseWriter, request *http.Request) {
 
 	client := newRedisClient()
@@ -104,78 +178,4 @@ func handleDelete(writer http.ResponseWriter, request *http.Request) {
 	}
 	htmlResponse := generateHTMLforItems(items)
 	fmt.Fprintf(writer, htmlResponse)
-}
-
-func handleList(writer http.ResponseWriter, request *http.Request) {
-
-	key := "itemsList"
-	client := newRedisClient()
-
-	items, err := client.LRange(ctx, key, 0, -1).Result()
-	if err != nil {
-		http.Error(writer, "Failed to fetch items", http.StatusInternalServerError)
-		log.Fatalf("Failed to start server: %+v", err)
-	}
-
-	htmlResponse := generateHTMLforItems(items)
-	fmt.Fprintf(writer, htmlResponse)
-}
-
-func generateHTMLforItems(items []string) string {
-	var htmlBuilder strings.Builder
-	htmlBuilder.WriteString("<ul class='items-list' id='items-list'>")
-	for _, item := range items {
-		safeItem := html.EscapeString(item)
-		htmlBuilder.WriteString(fmt.Sprintf("<li class='item'><span class='item-name'>%s</span> <button class='btn delete-btn' hx-post='/delete' hx-target='#items-list' hx-swap='outerHTML' hx-vals='{\"item\":\"%s\"}'>Delete</button></li>", safeItem, safeItem))
-	}
-	htmlBuilder.WriteString("</ul>")
-	return htmlBuilder.String()
-
-}
-
-func handleAdd(writer http.ResponseWriter, request *http.Request) {
-
-	key := "itemsList"
-
-	// assuming application/x-www-form-urlencoded data
-	if err := request.ParseForm(); err != nil {
-		http.Error(writer, "Invalid Form data", 400)
-		return
-	}
-	item := request.FormValue("item")
-
-	// use Redis client to add the item
-	client := newRedisClient()
-	if err := client.RPush(ctx, key, item).Err(); err != nil {
-		http.Error(writer, "Failed to add item", http.StatusInternalServerError)
-		return
-	}
-
-	writer.WriteHeader(http.StatusCreated)
-	items, err := client.LRange(ctx, key, 0, -1).Result()
-	if err != nil {
-		http.Error(writer, "Failed to fetch items", http.StatusInternalServerError)
-		log.Fatalf("Failed to start server: %+v", err)
-	}
-	htmlResponse := generateHTMLforItems(items)
-	fmt.Fprintf(writer, htmlResponse)
-}
-
-type PageData struct {
-	Name    string
-	PodName string
-}
-
-func serveFrontend(writer http.ResponseWriter, request *http.Request) {
-	t, _ := template.ParseFiles("static/index.html")
-
-	data := PageData{
-		Name:    getPerson(),
-		PodName: getPodName(),
-	}
-	err := t.Execute(writer, data)
-	if err != nil {
-		return
-	}
-
 }
