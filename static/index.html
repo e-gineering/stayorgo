@@ -6,7 +6,7 @@
     <script src="https://unpkg.com/htmx.org"></script>
 </head>
 <body>
-<h1>Hello {{.Name}}</h1>
+<h1>Hello {{.Name}} served from {{.PodName}}</h1>
 <h2>Items List</h2>
 <div id="items-list" hx-get="/list" hx-trigger="load">
     <!-- Items will be loaded here -->

@@ -13,10 +13,14 @@ import (
 
 func greeting() string {
 	person := os.Getenv("PERSON")
+	podName := os.Getenv("POD_NAME")
 	if person == "" {
 		person = "you"
 	}
-	return fmt.Sprintf("hello %s", person)
+	if podName == "" {
+		podName = "podname"
+	}
+	return fmt.Sprintf("hello %s from %s", person, podName)
 }
 
 func main() {
@@ -144,14 +148,16 @@ func handleAdd(writer http.ResponseWriter, request *http.Request) {
 }
 
 type PageData struct {
-	Name string
+	Name    string
+	PodName string
 }
 
 func serveFrontend(writer http.ResponseWriter, request *http.Request) {
 	t, _ := template.ParseFiles("static/index.html")
 
 	data := PageData{
-		Name: os.Getenv("PERSON"),
+		Name:    os.Getenv("PERSON"),
+		PodName: os.Getenv("POD_NAME"),
 	}
 	err := t.Execute(writer, data)
 	if err != nil {

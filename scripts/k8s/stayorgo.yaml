@@ -33,6 +33,10 @@ spec:
                value: redis
              - name: PERSON
                value: Fredrick
+             - name: POD_NAME
+               valueFrom:
+                 fieldRef:
+                   fieldPath: metadata.name
       restartPolicy: Always
 
 ---

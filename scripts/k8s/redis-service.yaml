@@ -39,7 +39,7 @@ spec:
     - metadata:
         name: redis-data
       spec:
-        accessModes: [ "ReadWriteOnce" ]
+        accessModes: [ "ReadWriteOnce" ] #RW for a single node
         resources:
           requests:
             storage: 1Gi # Define the size of storage you need
