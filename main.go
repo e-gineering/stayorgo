@@ -12,15 +12,26 @@ import (
 )
 
 func greeting() string {
-	person := os.Getenv("PERSON")
+	person := getPerson()
+	podName := getPodName()
+	return fmt.Sprintf("hello %s from %s", person, podName)
+}
+
+func getPodName() string {
 	podName := os.Getenv("POD_NAME")
+
+	if podName == "" {
+		podName = "local process"
+	}
+	return podName
+}
+
+func getPerson() string {
+	person := os.Getenv("PERSON")
 	if person == "" {
 		person = "you"
 	}
-	if podName == "" {
-		podName = "podname"
-	}
-	return fmt.Sprintf("hello %s from %s", person, podName)
+	return person
 }
 
 func main() {
@@ -159,8 +170,8 @@ func serveFrontend(writer http.ResponseWriter, request *http.Request) {
 	t, _ := template.ParseFiles("static/index.html")
 
 	data := PageData{
-		Name:    os.Getenv("PERSON"),
-		PodName: os.Getenv("POD_NAME"),
+		Name:    getPerson(),
+		PodName: getPodName(),
 	}
 	err := t.Execute(writer, data)
 	if err != nil {
