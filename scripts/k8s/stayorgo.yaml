@@ -51,6 +51,7 @@ spec:
   ports:
     - port: 8080  # The port the service is exposed on
       targetPort: 8080  # The target port on the pods, adjust as necessary
+      nodePort: 30007 #30000-32767 reserved for K8s
       protocol: TCP
       name: http
   selector:
