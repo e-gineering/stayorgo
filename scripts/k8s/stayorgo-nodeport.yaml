@@ -17,7 +17,7 @@ spec:
     spec:
       containers:
         - name: stayorgo
-          image: stayorgo:0.1
+          image: stayorgo:0.2
           imagePullPolicy: IfNotPresent
           ports:
             - containerPort: 8080
@@ -32,7 +32,7 @@ spec:
              - name: REDIS
                value: redis
              - name: PERSON
-               value: Fredrick
+               value: Luke
              - name: POD_NAME
                valueFrom:
                  fieldRef:
