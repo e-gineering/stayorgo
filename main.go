@@ -39,6 +39,7 @@ func main() {
 	mux.HandleFunc("/hello", func(w http.ResponseWriter, r *http.Request) {
 		// use the greeting function to get the greeting message
 		message := greeting()
+		log.Printf("Greeting:%s", message)
 		_, err := fmt.Fprintf(w, message)
 		if err != nil {
 			return
