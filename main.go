@@ -60,7 +60,7 @@ func main() {
 
 	// CORS handler
 	handler := cors.New(cors.Options{
-		//TODO fix cors for any development but local
+		//Allow any domain... useful for a demo but not for production
 		AllowedOrigins:   []string{"*"},
 		AllowCredentials: true,
 		Debug:            true,

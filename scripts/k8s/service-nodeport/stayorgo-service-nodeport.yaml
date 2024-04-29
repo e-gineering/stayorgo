@@ -1,9 +1,9 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: stayorgo
+  name: stayorgo-deploy
   labels:
-    app: stayorgo
+    app: stayorgo-deploy
 spec:
   replicas: 1
   selector:
@@ -21,13 +21,6 @@ spec:
           imagePullPolicy: IfNotPresent
           ports:
             - containerPort: 8080
-          resources:
-            requests:
-              memory: "64M"
-              cpu: "250m"
-            limits:
-              memory: "64M"
-              cpu: "250m"
           readinessProbe:
             httpGet:
               port: 8080
@@ -46,17 +39,24 @@ spec:
             timeoutSeconds: 1
             successThreshold: 1
             failureThreshold: 3
+          resources:
+            requests:
+              memory: "64M"
+              cpu: "250m"
+            limits:
+              memory: "64M"
+              cpu: "250m"
           env:
              - name: REDIS
                value: redis
              - name: PERSON
-               value: Sarah
+               value: Luke
              - name: POD_NAME
                valueFrom:
                  fieldRef:
                    fieldPath: metadata.name
-
       restartPolicy: Always
+
 
 ---
 apiVersion: v1
@@ -66,30 +66,12 @@ metadata:
   labels:
     app: stayorgo
 spec:
-  type: ClusterIP #cluster port expose for localhost routing
+  type: NodePort #cluster port expose for localhost routing
   ports:
     - port: 8080  # The port the service is exposed on
       targetPort: 8080  # The target port on the pods, adjust as necessary
+      nodePort: 30007 #30000-32767 reserved for K8s
       protocol: TCP
       name: http
   selector:
     app: stayorgo  # Must match labels of the pods you want to target
-
----
-apiVersion: networking.k8s.io/v1
-kind: Ingress
-metadata:
-  name: stayorgo-ingress
-spec:
-  ingressClassName: nginx
-  rules:
-    - host: stayorgo.k8s.orb.local
-      http:
-        paths:
-          - path: /
-            pathType: Prefix
-            backend:
-              service:
-                name: stayorgo-service
-                port:
-                  name: http

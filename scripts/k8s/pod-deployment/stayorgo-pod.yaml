@@ -22,7 +22,7 @@ spec:
         - name: REDIS
           value: "redis"
         - name: PERSON
-          value: "Edward"
+          value: "Benjamin"
         - name: POD_NAME
           valueFrom:
             fieldRef:
