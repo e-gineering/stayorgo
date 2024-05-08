@@ -1,36 +1,47 @@
 # Do I stay or do I Go?
 
-Simple test application using the [Go](https://go.dev) language 
+Simple demo application as an example of an external state store deployed capability.
+Built using the [Go](https://go.dev) language with [GoLand](https://www.jetbrains.com/go/)
 and the [htmx](https://htmx.org) Javascript library to generate interactive DOM
 segments.
-Expects a local K8s cluster using [Orbstack](https://orbstack.dev)
+The application requires an available [Redis](https://redis.io/docs/latest/operate/oss_and_stack/) key value store
+configured through environment variables.
+
+Demonstrated with a local K8s cluster using [Orbstack](https://orbstack.dev)
+and [k9s](https://k9scli.io) for visualization
+
 ## Demonstrates the following key K8s capabilities
-* Pod and Deployment creation
+* Kubernetes Pod and Deployment
 * NodePort routing
 * Ingress routing
-* Configuration by environment variable
-* health checks
+* Configuration through environment variables
+* Deployment Health checks
 
-# Demo Steps
-Stay or Go list of items application.
-Going from development through to a deployed application
+# Demo
+Go from local development through to a deployed application
+
 ## Local Development
 - [ ] Start the local container for Redis via docker-compose
 - [ ] Launch the Application from the IDE with configuration
 - [ ] Verify 'Hello' endpoint using localtest.http
 - [ ] Show the application running on http://localhost:8080
+- [ ] Shutdown the application because it is just a Pod
 ## Pod Deployment
 _note_ Redis is already deployed as a running service
-- [ ] Docker build of the container
+- [ ] Docker build of the container ```docker build -t stayorgo:0.1 .```
 - [ ] Deploy as a pod scripts/k8s/pod-deployment/stayorgo-pod.yaml
-- [ ] Local port-forward to port 8080
+- [ ] Local port-forward to port 8080 ```kubectl port-forward <pod> 8080:8080```
 - [ ] Show the application executing (connected to Redis in K8s)
+- [ ] Show shutdown without restart
 ## Service with Nodeport
 - [ ] Apply scripts/k8s/service-nodeport/stayorgo-service-nodeport.yaml
 - [ ] Show the application running on http://localhost:30007
 ## Service with Ingress allowed with Nginx Ingress Controller
 - [ ] Apply scripts/k8s/service-ingress/stayorgo-service-ingress.yaml
 - [ ] Show the application running on http://stayorgo.k8s.orb.local
+- [ ] Show scaling the application
+- [ ] Show deleting a replica
+- [ ] Show restarting a deployment
 
 # Ingress Installation (preliminary to the demo)
 
@@ -74,3 +85,10 @@ I chose the name nginx-ingress-3-4 for the helm install
 also . chooses the default values.yaml (look it over first for your desired configuration)
 
 The default configuration listens on port 80 and 443 for routing
+
+# Reference Links
+Why readiness and healthiness tests are important
+[Hello IT, have you tried turning it off and on again?](https://www.youtube.com/watch?v=t2F1rFmyQmY)
+
+Spending more on Kubernetes due to overprovisioning
+[InfoQ Article](https://www.infoq.com/news/2024/03/cncf-finops-kubernetes-overspend/?utm_campaign=infoq_content&utm_source=infoq&utm_medium=feed&utm_term=DevOps)
