@@ -25,7 +25,6 @@ Go from local development through to a deployed application
 - [ ] Launch the Application from the IDE with configuration
 - [ ] Verify 'Hello' endpoint using localtest.http
 - [ ] Show the application running on http://localhost:8080
-- [ ] Shutdown the application because it is just a Pod
 ## Pod Deployment
 _note_ Redis is already deployed as a running service
 - [ ] Docker build of the container ```docker build -t stayorgo:0.1 .```
