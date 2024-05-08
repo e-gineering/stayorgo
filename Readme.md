@@ -23,7 +23,7 @@ Go from local development through to a deployed application
 ## Local Development
 - [ ] Start the local container for Redis via docker-compose ```docker compose --file scripts/docker-compose.yaml up -d```
 - [ ] Launch the Application from the IDE with configuration
-- [ ] Verify 'Hello' endpoint using localtest.http
+- [ ] Verify 'Hello' endpoint using localtest.http (used for health check)
 - [ ] Show the application running on http://localhost:8080
 ## Pod Deployment
 _note_ Redis is already deployed as a running service
