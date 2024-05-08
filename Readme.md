@@ -21,28 +21,31 @@ and [k9s](https://k9scli.io) for visualization
 Go from local development through to a deployed application
 
 ## Local Development
-- [ ] Start the local container for Redis via docker-compose
+- [ ] Start the local container for Redis via docker-compose ```docker compose --file scripts/docker-compose.yaml up -d```
 - [ ] Launch the Application from the IDE with configuration
 - [ ] Verify 'Hello' endpoint using localtest.http
 - [ ] Show the application running on http://localhost:8080
 ## Pod Deployment
 _note_ Redis is already deployed as a running service
 - [ ] Docker build of the container ```docker build -t stayorgo:0.1 .```
-- [ ] Deploy as a pod scripts/k8s/pod-deployment/stayorgo-pod.yaml
-- [ ] Local port-forward to port 8080 ```kubectl port-forward <pod> 8080:8080```
+- [ ] Show pod definition yaml
+- [ ] Deploy as a pod scripts/k8s/pod-deployment/stayorgo-pod.yaml ```kubectl apply -f scripts/k8s/pod-deployment/stayorgo-pod.yaml```
+- [ ] Local port-forward to port 8080 ```kubectl port-forward stayorgo-pod 8080:8080```
 - [ ] Show the application executing (connected to Redis in K8s)
 - [ ] Show shutdown without restart
-## Service with Nodeport
+## Deployment Service with Nodeport
+- [ ] Show Deployment, Service and NodePort
 - [ ] Apply scripts/k8s/service-nodeport/stayorgo-service-nodeport.yaml
 - [ ] Show the application running on http://localhost:30007
 ## Service with Ingress allowed with Nginx Ingress Controller
+- [ ] Show Deployment, Service, and Ingress
 - [ ] Apply scripts/k8s/service-ingress/stayorgo-service-ingress.yaml
 - [ ] Show the application running on http://stayorgo.k8s.orb.local
 - [ ] Show scaling the application
 - [ ] Show deleting a replica
 - [ ] Show restarting a deployment
 
-# Ingress Installation (preliminary to the demo)
+# Nginx Ingress Installation (preliminary to the demo)
 
 ## Helm Install
 Tested with [version 3.4](https://hub.docker.com/r/nginx/nginx-ingress/tags)
@@ -89,5 +92,5 @@ The default configuration listens on port 80 and 443 for routing
 Why readiness and healthiness tests are important
 [Hello IT, have you tried turning it off and on again?](https://www.youtube.com/watch?v=t2F1rFmyQmY)
 
-Spending more on Kubernetes due to overprovisioning
+Spending more on Kubernetes due to overprovisioning compute resources
 [InfoQ Article](https://www.infoq.com/news/2024/03/cncf-finops-kubernetes-overspend/?utm_campaign=infoq_content&utm_source=infoq&utm_medium=feed&utm_term=DevOps)
