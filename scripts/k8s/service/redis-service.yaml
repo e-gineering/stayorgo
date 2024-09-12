@@ -42,4 +42,4 @@ spec:
         accessModes: [ "ReadWriteOnce" ] #RW for a single node
         resources:
           requests:
-            storage: 1Gi # Define the size of storage you need
+            storage: 10Mi # Define the size of storage you need
