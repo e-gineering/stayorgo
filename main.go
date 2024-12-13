@@ -178,5 +178,8 @@ func handleDelete(writer http.ResponseWriter, request *http.Request) {
 		log.Fatalf("Failed to start server: %+v", err)
 	}
 	htmlResponse := generateHTMLforItems(items)
-	fmt.Fprintf(writer, htmlResponse)
+	_, err = fmt.Fprintf(writer, htmlResponse)
+	if err != nil {
+		return
+	}
 }
